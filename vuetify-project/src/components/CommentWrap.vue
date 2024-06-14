@@ -33,6 +33,6 @@ onMounted( ()=>{
  <div>
    <h3> 게시글 "{{props.postTitle.rendered}}" 댓글 수 : {{ comment.length }} </h3>
    <Comments @update='getCommentData' :data="comment"/>
-   <AddComment :update-value=true @submit="getCommentData" :detail-id="props.detailId"/>
+   <AddComment @submit="getCommentData" :detail-id="props.detailId"/>
  </div>
 </template>
