@@ -1,19 +1,29 @@
 import {defineStore} from "pinia";
-import {tr} from "vuetify/locale";
 
 export const useCommentStore = defineStore('isEdit',{
   state: () => ({
-    edit: {}
+    edit: {},
+    reply: {}
   }),
   actions: {
-    toggle(selectedId) {
+    editToggle(selectedId) {
       Object.keys(this.edit).forEach(id => {
         this.edit[id] = id === selectedId.toString() ? !this.edit[id] : false
       })
     },
-    resetAll() {
+    editResetAll() {
       Object.keys(this.edit).forEach(id => {
         this.edit[id] = false
+      })
+    },
+    replyToggle(selectedId) {
+      Object.keys(this.reply).forEach(id => {
+        this.reply[id] = id === selectedId.toString() ? !this.reply[id] : false
+      })
+    },
+    replyResetAll() {
+      Object.keys(this.reply).forEach(id => {
+        this.reply[id] = false
       })
     }
   },

@@ -3,6 +3,7 @@ import {onMounted, reactive, ref, watch} from "vue";
 import Comments from "@/components/Comments.vue";
 import UpdateComment from "@/components/UpdateComment.vue";
 import {useCommentStore} from "@/stores/comment";
+import ReplyComment from "@/components/ReplyComment.vue";
 
 const props = defineProps({
   data: Array,
@@ -13,17 +14,23 @@ const props = defineProps({
 })
 
 const emit = defineEmits([
-  'update'
+  'update',
+  'reply'
 ])
 
 const store = useCommentStore()
 
 const showEdit = (selectedId) => {
-  store.toggle(selectedId)
+  store.editToggle(selectedId)
+  store.replyResetAll()
   console.log(store.edit)
 }
 
-const commentId = ref()
+const showReply = (selectedId) => {
+  store.replyToggle(selectedId)
+  store.editResetAll()
+  console.log(store.reply)
+}
 
 const commentData = ref([])
 
@@ -33,8 +40,9 @@ watch(
   (data) => {
     commentData.value = data
     commentData.value.forEach(item => {
-      if(store.edit[item.id] === undefined){
+      if(store.edit[item.id] === undefined || store.reply[item.id] === undefined){
         store.edit[item.id] = false
+        store.reply[item.id] = false
       }
     })
   },
@@ -45,8 +53,9 @@ onMounted( ()=>{
   commentData.value = props.data
 
   commentData.value.forEach(item => {
-    if(store.edit[item.id] === undefined){
+    if(store.edit[item.id] === undefined || store.reply[item.id] === undefined){
       store.edit[item.id] = false
+      store.reply[item.id] = false
     }
   })
 })
@@ -57,11 +66,15 @@ const date = (item) => {
   return `${yy}년 ${mm}월 ${dd}일`
 }
 
-const handleUpdate = (e) => {
+const handleUpdate = () => {
   emit('update')
-  store.resetAll()
+  store.editResetAll()
 }
 
+const handleReply = () => {
+  emit('reply')
+  store.replyResetAll()
+}
 </script>
 
 <template>
@@ -70,12 +83,16 @@ const handleUpdate = (e) => {
       {{ item.id }} {{ item.author_name }}
       {{ date(item) }}
       부모 : {{ item.parent }}
-      <button @click=" () => showEdit(item.id)" style="margin: 10px; border: 1px solid black;">Edit</button>
+      <button @click="() => showEdit(item.id)" style="margin: 10px; border: 1px solid black;">Edit</button>
       <div v-if="store.edit[item.id]">
-        <UpdateComment @update="handleUpdate(item.id)" :name-value="item.author_name" :content-value="item.content.rendered" :item-data="item" />
+        <UpdateComment @update="handleUpdate()" :item-data="item" />
       </div>
       <div v-if="!store.edit[item.id]">
         <div v-html="item.content.rendered"></div>
+      </div>
+      <button @click="() => showReply(item.id)" style="margin: 10px; border: 1px solid black;">Reply</button>
+      <div v-if="store.reply[item.id]">
+        <ReplyComment @reply="handleReply()" :item-data="item" />
       </div>
       <comments :data="commentData.filter(v => v.parent !== 0)" :parent-id="item.id" :key="item.id"></comments>
     </div>

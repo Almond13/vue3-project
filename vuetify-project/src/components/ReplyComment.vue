@@ -7,9 +7,10 @@ const detailStore = useDetailStore()
 const detailId = detailStore.detailId
 
 const props = defineProps({
+  itemData : Object
 })
 const emit = defineEmits([
-  'submit'
+  'reply'
 ])
 
 const commentName = defineModel('commentName')
@@ -17,22 +18,22 @@ const commentEmail = defineModel('commentEmail')
 const commentContent = defineModel('commentContent')
 
 const handlePost = () => {
-  axios.post(`https://theme.sunflower.kr/wp-json/wp/v2/comments`, {
-      post: detailId,
-      parent: 0,
-      author_name: commentName.value,
-      author_email: commentEmail.value,
-      content: commentContent.value,
-    }
-  )
-    .then(function (response) {
-      emit('submit')
-      console.log(response);
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
-  emit('submit')
+  // axios.post(`https://theme.sunflower.kr/wp-json/wp/v2/comments`, {
+  //     post: detailId,
+  //     parent: props.itemData.id,
+  //     author_name: commentName.value,
+  //     author_email: commentEmail.value,
+  //     content: commentContent.value,
+  //   }
+  // )
+  //   .then(function (response) {
+  //     emit('reply')
+  //     console.log(response);
+  //   })
+  //   .catch(function (error) {
+  //     console.log(error);
+  //   });
+  emit('reply')
 }
 
 onMounted( ()=>{
@@ -42,7 +43,7 @@ onMounted( ()=>{
 
 <template>
   <div>
-    <h3> 댓글 남기기 </h3>
+    <h3> 대댓글 남기기 </h3>
     <div>
       <h4>이름</h4>
       <textarea v-model="commentName" style="margin: 10px; border: 1px solid black;" />
