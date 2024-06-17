@@ -1,23 +1,20 @@
 import {defineStore} from "pinia";
+import {tr} from "vuetify/locale";
 
 export const useCommentStore = defineStore('isEdit',{
   state: () => ({
-    edit: false,
-    origin: false
+    edit: {}
   }),
-  // getters: {
-  //   // getEdit: state => state.isEdit,
-  // },
-  // // 상태값을 바꾸고 싶을 떄!
-  // // 여기서 this 쓰는거 유의하기!
   actions: {
-    show() {
-      this.edit = true
-      this.origin = false
+    toggle(selectedId) {
+      Object.keys(this.edit).forEach(id => {
+        this.edit[id] = id === selectedId.toString() ? !this.edit[id] : false
+      })
     },
-    hide(){
-      this.edit = false
-      this.origin = true
+    resetAll() {
+      Object.keys(this.edit).forEach(id => {
+        this.edit[id] = false
+      })
     }
   },
 })

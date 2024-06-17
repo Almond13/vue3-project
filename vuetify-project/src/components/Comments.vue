@@ -18,41 +18,12 @@ const emit = defineEmits([
 
 const store = useCommentStore()
 
-// const showEdit = (selectedId) => {
-//   // isEdit[selectedId] = !isEdit[selectedId]
-//   // Object.keys(isEdit).forEach(id => {
-//   //   isEdit[id] = (parseInt(id) === selectedId ? store.show() : store.hide())
-//   // })
-//   Object.keys(isEdit).forEach(id => {
-//     if(parseInt(id) === selectedId ){
-//       isEdit[id] = !isEdit[id]
-//       if (isEdit[id]){
-//         store.show()
-//       } else {
-//         store.hide()
-//       }
-//     } else {
-//       store.hide()
-//       isEdit[id] = store.edit
-//     }
-//   })
-// }
-
 const showEdit = (selectedId) => {
-  Object.keys(isEdit).forEach(id => {
-    if(parseInt(id) === selectedId) {
-      isEdit[id] = !isEdit[id]
-    } else {
-      isEdit[id] = false
-    }
-  })
-
+  store.toggle(selectedId)
+  console.log(store.edit)
 }
 
 const commentId = ref()
-
-// TODO : isEdit store 등록
-const isEdit = reactive({})
 
 const commentData = ref([])
 
@@ -62,7 +33,9 @@ watch(
   (data) => {
     commentData.value = data
     commentData.value.forEach(item => {
-      isEdit[item.id] = false
+      if(store.edit[item.id] === undefined){
+        store.edit[item.id] = false
+      }
     })
   },
   {immediate: true}
@@ -72,9 +45,9 @@ onMounted( ()=>{
   commentData.value = props.data
 
   commentData.value.forEach(item => {
-    isEdit[item.id] = false
-    console.log(isEdit[148])
-
+    if(store.edit[item.id] === undefined){
+      store.edit[item.id] = false
+    }
   })
 })
 
@@ -86,7 +59,7 @@ const date = (item) => {
 
 const handleUpdate = (e) => {
   emit('update')
-  isEdit.value = false
+  store.resetAll()
 }
 
 </script>
@@ -96,11 +69,13 @@ const handleUpdate = (e) => {
     <div v-for="item in commentData.filter(v => v.parent === props.parentId)" :key="item.id" style="margin: 10px; border: 1px solid red;">
       {{ item.id }} {{ item.author_name }}
       {{ date(item) }}
-      <div v-html="item.content.rendered"></div>
       부모 : {{ item.parent }}
       <button @click=" () => showEdit(item.id)" style="margin: 10px; border: 1px solid black;">Edit</button>
-      <div v-if="isEdit[item.id]">
-      <UpdateComment @update="handleUpdate(item.id)" :name-value="item.author_name" :content-value="item.content.rendered" :item-data="item" />
+      <div v-if="store.edit[item.id]">
+        <UpdateComment @update="handleUpdate(item.id)" :name-value="item.author_name" :content-value="item.content.rendered" :item-data="item" />
+      </div>
+      <div v-if="!store.edit[item.id]">
+        <div v-html="item.content.rendered"></div>
       </div>
       <comments :data="commentData.filter(v => v.parent !== 0)" :parent-id="item.id" :key="item.id"></comments>
     </div>

@@ -47,10 +47,10 @@ onMounted( () => {
 
 <template>
   <div>
-    <h3> 댓글 남기기 </h3>
+    <h3> 댓글 수정 </h3>
     <div>
-      <h4>이름</h4>
-      <input v-model="nameValue" style="margin: 10px; border: 1px solid black;"/>
+<!--      <h4>이름</h4>-->
+<!--      <input v-model="nameValue" style="margin: 10px; border: 1px solid black;" readonly />-->
       <h4>내용</h4>
       <input v-model="contentValue" style="margin: 10px; border: 1px solid black;" />
     </div>
