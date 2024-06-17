@@ -17,7 +17,6 @@ const handleUpdate = () => {
   //   id: 148,
   //   content: 'commentContent.value!!!!!!!'
   // })
-  console.log(props.itemData.id)
   emit('update')
 }
 

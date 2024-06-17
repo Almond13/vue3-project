@@ -30,7 +30,6 @@ watch(
   (page) => {
     currentPage.value = Number(page)
     getPost()
-    console.log(typeof page)
   }
 )
 
