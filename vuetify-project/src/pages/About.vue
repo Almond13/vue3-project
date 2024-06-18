@@ -9,7 +9,7 @@ const list = ref([])
 
 
 onMounted(async () => {
-  const {headers, data} = await axios.get('https://theme.sunflower.kr/wp-json/wp/v2/posts',{
+  const {headers, data} = await axios.get( import.meta.env.VITE_POSTS_API,{
     params:{
       per_page: 5
     }

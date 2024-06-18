@@ -17,22 +17,24 @@ const commentName = defineModel('commentName')
 const commentEmail = defineModel('commentEmail')
 const commentContent = defineModel('commentContent')
 
+// TODO : async, pagination, total comment, post,
+// const handlePost = async () => {
+//   try{
+//     await axios.post( import.meta.env.VITE_COMMENTS_API, {
+//         post: detailId,
+//         parent: props.itemData.id,
+//         author_name: commentName.value,
+//         author_email: commentEmail.value,
+//         content: commentContent.value,
+//       }
+//     )
+//     emit('reply')
+//   } catch (error) {
+//     console.log(error)
+//   }
+// }
+
 const handlePost = () => {
-  axios.post(`https://theme.sunflower.kr/wp-json/wp/v2/comments`, {
-      post: detailId,
-      parent: props.itemData.id,
-      author_name: commentName.value,
-      author_email: commentEmail.value,
-      content: commentContent.value,
-    }
-  )
-    .then(function (response) {
-      emit('reply')
-      console.log(response);
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
   emit('reply')
 }
 
@@ -52,6 +54,6 @@ onMounted( () => {
       <h4>내용</h4>
       <textarea v-model="commentContent" style="margin: 10px; border: 1px solid black;" />
     </div>
-    <button type="submit" @click="handlePost" style="margin: 10px; border: 1px solid black;">Submit</button>
+    <button type="submit" @click="() => handlePost()" style="margin: 10px; border: 1px solid black;">Submit</button>
   </div>
 </template>

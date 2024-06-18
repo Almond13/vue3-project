@@ -58,13 +58,16 @@ const date = (item) => {
 const showEdit = (selectedId) => {
   store.editToggle(selectedId)
   store.replyResetAll()
-  console.log(store.edit)
+
+  store.currentComment = {
+    index: selectedId,
+    title: 'aaaaa'
+  }
 }
 
 const showReply = (selectedId) => {
   store.replyToggle(selectedId)
   store.editResetAll()
-  console.log(store.reply)
 }
 
 const handleUpdate = () => {
@@ -75,10 +78,11 @@ const handleUpdate = () => {
 const handleReply = () => {
   emit('reply')
   store.replyResetAll()
+  console.log('중간')
 }
-
+// FIXME: delete api 권한 이슈, delete password로 가능할지 확인
 const handleDelete = (id) => {
-  // axios.delete(`https://theme.sunflower.kr/wp-json/wp/v2/comments/${id}`)
+  // axios.delete(`${import.meta.env.VITE_COMMENTS_API}/${id}`)
   emit('delete')
 }
 </script>
@@ -99,7 +103,7 @@ const handleDelete = (id) => {
       </div>
       <button @click="() => showReply(item.id)" style="margin: 10px; border: 1px solid black;">Reply</button>
       <div v-if="store.reply[item.id]">
-        <ReplyComment @reply="handleReply()" :item-data="item" />
+        <ReplyComment @reply="handleReply" :item-data="item" />
       </div>
       <comments :data="commentData.filter(v => v.parent !== 0)" :parent-id="item.id" :key="item.id"></comments>
     </div>

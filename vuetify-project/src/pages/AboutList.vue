@@ -8,9 +8,10 @@ const route = useRoute()
 const list = ref([])
 const total = ref(0)
 const currentPage = ref(Number(route.params.page) || 1)
+// const currentPage = ref(Math.ceil(Number(route.params.page) || 1  / 5) * 5)
 
 const getPost = async () => {
-  const {headers, data} = await axios.get('https://theme.sunflower.kr/wp-json/wp/v2/posts',{
+  const {headers, data} = await axios.get( import.meta.env.VITE_POSTS_API,{
     params:{
       per_page: 5,
       page: currentPage.value

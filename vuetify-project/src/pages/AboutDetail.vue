@@ -1,9 +1,10 @@
 <script setup>
-import {onMounted, ref} from "vue";
+import {onMounted, ref, onBeforeUnmount, onUnmounted} from "vue";
 import axios from "axios";
 import {useRoute} from "vue-router";
 import CommentWrap from "@/components/CommentWrap.vue";
 import {useDetailStore} from "@/stores/detail";
+import {useCommentStore} from "@/stores/comment";
 
 const store = useDetailStore()
 const route = useRoute()
@@ -11,8 +12,10 @@ const post = ref({})
 const fixedDate = ref('')
 const detailId = ref(route.params.id)
 
+const commentStore = useCommentStore()
+
 onMounted(async ()=>{
-  const {data, headers}  = await axios.get(`https://theme.sunflower.kr/wp-json/wp/v2/posts/${detailId.value}`)
+  const {data, headers}  = await axios.get(`${import.meta.env.VITE_POSTS_API}/${detailId.value}`)
 
   post.value = data
 
@@ -23,8 +26,14 @@ onMounted(async ()=>{
   fixedDate.value =  dateObj.toLocaleDateString('en-US', options)
 
   store.detailId = route.params.id
+})
 
-  console.log(data)
+// TODO : store 초기화 공부
+onUnmounted(() => {
+  commentStore.$state = {
+    ...commentStore.defaultState,
+    defaultState: commentStore.defaultState
+  }
 })
 
 </script>

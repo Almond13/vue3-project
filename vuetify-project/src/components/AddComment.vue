@@ -17,7 +17,7 @@ const commentEmail = defineModel('commentEmail')
 const commentContent = defineModel('commentContent')
 
 const handlePost = () => {
-  axios.post(`https://theme.sunflower.kr/wp-json/wp/v2/comments`, {
+  axios.post( import.meta.env.VITE_COMMENTS_API, {
       post: detailId,
       parent: 0,
       author_name: commentName.value,

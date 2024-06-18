@@ -12,8 +12,9 @@ const emit = defineEmits([
 const commentName = ref()
 const commentContent = ref()
 
+// FIXME: update api 권한(?) 이슈, 추후 수정
 const handleUpdate = () => {
-  // axios.patch(`https://theme.sunflower.kr/wp-json/wp/v2/comments`,{
+  // axios.patch( import.meta.env.VITE_COMMENTS_API, {
   //   id: props.itemData.id,
   //   content: 'commentContent.value!!!!!!!'
   // })
