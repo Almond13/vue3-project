@@ -23,6 +23,8 @@ onMounted(async ()=>{
   fixedDate.value =  dateObj.toLocaleDateString('en-US', options)
 
   store.detailId = route.params.id
+
+  console.log(data)
 })
 
 </script>

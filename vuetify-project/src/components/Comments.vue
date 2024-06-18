@@ -1,5 +1,6 @@
 <script setup>
-import {onMounted, reactive, ref, watch} from "vue";
+import {onMounted, ref, watch} from "vue";
+import axios from "axios";
 import Comments from "@/components/Comments.vue";
 import UpdateComment from "@/components/UpdateComment.vue";
 import {useCommentStore} from "@/stores/comment";
@@ -15,25 +16,13 @@ const props = defineProps({
 
 const emit = defineEmits([
   'update',
-  'reply'
+  'reply',
+  'delete'
 ])
 
 const store = useCommentStore()
 
-const showEdit = (selectedId) => {
-  store.editToggle(selectedId)
-  store.replyResetAll()
-  console.log(store.edit)
-}
-
-const showReply = (selectedId) => {
-  store.replyToggle(selectedId)
-  store.editResetAll()
-  console.log(store.reply)
-}
-
 const commentData = ref([])
-
 
 watch(
   () => props.data,
@@ -49,7 +38,7 @@ watch(
   {immediate: true}
 )
 
-onMounted( ()=>{
+onMounted( ()=> {
   commentData.value = props.data
 
   commentData.value.forEach(item => {
@@ -66,6 +55,18 @@ const date = (item) => {
   return `${yy}년 ${mm}월 ${dd}일`
 }
 
+const showEdit = (selectedId) => {
+  store.editToggle(selectedId)
+  store.replyResetAll()
+  console.log(store.edit)
+}
+
+const showReply = (selectedId) => {
+  store.replyToggle(selectedId)
+  store.editResetAll()
+  console.log(store.reply)
+}
+
 const handleUpdate = () => {
   emit('update')
   store.editResetAll()
@@ -74,6 +75,11 @@ const handleUpdate = () => {
 const handleReply = () => {
   emit('reply')
   store.replyResetAll()
+}
+
+const handleDelete = (id) => {
+  // axios.delete(`https://theme.sunflower.kr/wp-json/wp/v2/comments/${id}`)
+  emit('delete')
 }
 </script>
 
@@ -84,6 +90,7 @@ const handleReply = () => {
       {{ date(item) }}
       부모 : {{ item.parent }}
       <button @click="() => showEdit(item.id)" style="margin: 10px; border: 1px solid black;">Edit</button>
+      <button @click="() => handleDelete(item.id)" style="margin: 10px; border: 1px solid black;">Delete</button>
       <div v-if="store.edit[item.id]">
         <UpdateComment @update="handleUpdate()" :item-data="item" />
       </div>

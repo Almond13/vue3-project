@@ -18,6 +18,8 @@ const getCommentData = async () => {
   const {data} = await axios.get(`https://theme.sunflower.kr/wp-json/wp/v2/comments`,{
     params: {
       post: detailId,
+      order: 'asc',
+      orderby: 'date',
       per_page: 100
     }
   })
@@ -33,11 +35,12 @@ onMounted( ()=>{
 </script>
 
 <template>
- <div>
+ <div v-if="comment.length > 0 ">
    <h3> 게시글 "{{props.postTitle.rendered}}" 댓글 수 : {{ comment.length }} </h3>
-   <Comments @update='getCommentData' @reply='getCommentData' :data="comment"/>
+   <Comments @update='getCommentData' @reply='getCommentData' @delete='getCommentData' :data="comment"/>
    <div>
     <AddComment @submit="getCommentData" />
    </div>
  </div>
+  <div v-else>댓글 로딩 중 . . .</div>
 </template>

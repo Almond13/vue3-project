@@ -1,5 +1,5 @@
 <script setup>
-import {computed, onMounted, ref, watch} from "vue";
+import {onMounted} from "vue";
 import axios from "axios";
 import {useDetailStore} from "@/stores/detail";
 
@@ -18,25 +18,25 @@ const commentEmail = defineModel('commentEmail')
 const commentContent = defineModel('commentContent')
 
 const handlePost = () => {
-  // axios.post(`https://theme.sunflower.kr/wp-json/wp/v2/comments`, {
-  //     post: detailId,
-  //     parent: props.itemData.id,
-  //     author_name: commentName.value,
-  //     author_email: commentEmail.value,
-  //     content: commentContent.value,
-  //   }
-  // )
-  //   .then(function (response) {
-  //     emit('reply')
-  //     console.log(response);
-  //   })
-  //   .catch(function (error) {
-  //     console.log(error);
-  //   });
+  axios.post(`https://theme.sunflower.kr/wp-json/wp/v2/comments`, {
+      post: detailId,
+      parent: props.itemData.id,
+      author_name: commentName.value,
+      author_email: commentEmail.value,
+      content: commentContent.value,
+    }
+  )
+    .then(function (response) {
+      emit('reply')
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
   emit('reply')
 }
 
-onMounted( ()=>{
+onMounted( () => {
 })
 
 </script>

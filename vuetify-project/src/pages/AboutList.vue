@@ -2,7 +2,7 @@
 import {onMounted, ref, watch} from "vue";
 
 import axios from "axios";
-import { useRouter, useRoute } from 'vue-router'
+import { useRoute } from 'vue-router'
 const route = useRoute()
 
 const list = ref([])

@@ -14,7 +14,7 @@ const commentContent = ref()
 
 const handleUpdate = () => {
   // axios.patch(`https://theme.sunflower.kr/wp-json/wp/v2/comments`,{
-  //   id: 148,
+  //   id: props.itemData.id,
   //   content: 'commentContent.value!!!!!!!'
   // })
   emit('update')
