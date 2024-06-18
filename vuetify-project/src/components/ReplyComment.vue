@@ -20,7 +20,7 @@ const commentContent = defineModel('commentContent')
 // TODO : async, pagination, total comment, post,
 // const handlePost = async () => {
 //   try{
-//     await axios.post( import.meta.env.VITE_COMMENTS_API, {
+//     await axios.post( `${import.meta.env.VITE_BLOG_API}/comments`, {
 //         post: detailId,
 //         parent: props.itemData.id,
 //         author_name: commentName.value,

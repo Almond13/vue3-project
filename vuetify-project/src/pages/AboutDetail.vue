@@ -15,7 +15,7 @@ const detailId = ref(route.params.id)
 const commentStore = useCommentStore()
 
 onMounted(async ()=>{
-  const {data, headers}  = await axios.get(`${import.meta.env.VITE_POSTS_API}/${detailId.value}`)
+  const {data, headers}  = await axios.get(`${import.meta.env.VITE_BLOG_API}/posts/${detailId.value}`)
 
   post.value = data
 

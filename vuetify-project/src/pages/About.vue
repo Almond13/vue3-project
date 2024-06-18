@@ -9,7 +9,7 @@ const list = ref([])
 
 
 onMounted(async () => {
-  const {headers, data} = await axios.get( import.meta.env.VITE_POSTS_API,{
+  const {headers, data} = await axios.get( `${import.meta.env.VITE_BLOG_API}/posts`,{
     params:{
       per_page: 5
     }

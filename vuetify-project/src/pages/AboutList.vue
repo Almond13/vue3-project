@@ -11,7 +11,7 @@ const currentPage = ref(Number(route.params.page) || 1)
 // const currentPage = ref(Math.ceil(Number(route.params.page) || 1  / 5) * 5)
 
 const getPost = async () => {
-  const {headers, data} = await axios.get( import.meta.env.VITE_POSTS_API,{
+  const {headers, data} = await axios.get( `${import.meta.env.VITE_BLOG_API}/posts`,{
     params:{
       per_page: 5,
       page: currentPage.value

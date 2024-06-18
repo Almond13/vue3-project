@@ -14,7 +14,7 @@ const commentContent = ref()
 
 // FIXME: update api 권한(?) 이슈, 추후 수정
 const handleUpdate = () => {
-  // axios.patch( import.meta.env.VITE_COMMENTS_API, {
+  // axios.patch( `${import.meta.env.VITE_BLOG_API}/comments`, {
   //   id: props.itemData.id,
   //   content: 'commentContent.value!!!!!!!'
   // })

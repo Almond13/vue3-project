@@ -18,7 +18,7 @@ const props = defineProps({
 })
 
 const getCommentData = async () => {
-  const {data} = await axios.get( import.meta.env.VITE_COMMENTS_API,{
+  const {data} = await axios.get( `${import.meta.env.VITE_BLOG_API}/comments`,{
     params: {
       post: detailId,
       order: 'asc',

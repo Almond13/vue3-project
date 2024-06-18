@@ -17,7 +17,7 @@ const commentEmail = defineModel('commentEmail')
 const commentContent = defineModel('commentContent')
 
 const handlePost = () => {
-  axios.post( import.meta.env.VITE_COMMENTS_API, {
+  axios.post( `${import.meta.env.VITE_BLOG_API}/comments`, {
       post: detailId,
       parent: 0,
       author_name: commentName.value,

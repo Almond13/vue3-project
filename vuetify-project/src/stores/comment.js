@@ -47,7 +47,7 @@ export const useCommentStore = defineStore('isEdit',{
     async getComment(id) {
       console.log('store', id)
       this.postId = id
-      const {data} = await axios.get( import.meta.env.VITE_COMMENTS_API,{
+      const {data} = await axios.get( `${import.meta.env.VITE_BLOG_API}/comments`,{
         params: {
           post: id,
           order: 'asc',

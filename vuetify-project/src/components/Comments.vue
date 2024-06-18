@@ -82,7 +82,7 @@ const handleReply = () => {
 }
 // FIXME: delete api 권한 이슈, delete password로 가능할지 확인
 const handleDelete = (id) => {
-  // axios.delete(`${import.meta.env.VITE_COMMENTS_API}/${id}`)
+  // axios.delete(`${import.meta.env.VITE_BLOG_API}/comments/${id}`)
   emit('delete')
 }
 </script>
