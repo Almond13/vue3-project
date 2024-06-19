@@ -1,8 +1,6 @@
 import {defineStore} from "pinia";
 import {reactive, ref} from "vue";
 import axios from "axios";
-// import {useDetailStore} from "@/stores/detail";
-// const detailStore = useDetailStore()
 
 const defaultState = {
   edit: {},
@@ -45,7 +43,7 @@ export const useCommentStore = defineStore('isEdit',{
       })
     },
     async getComment(id) {
-      console.log('store', id)
+      // console.log('store', id)
       this.postId = id
       const {data} = await axios.get( `${import.meta.env.VITE_BLOG_API}/comments`,{
         params: {
@@ -57,10 +55,9 @@ export const useCommentStore = defineStore('isEdit',{
       })
 
       this.commentList = data
-      // comment.value = data
     },
-    add() {},
-    replay() {},
-    edit() {}
+    // add() {},
+    // replay() {},
+    // edit() {}
   },
 })

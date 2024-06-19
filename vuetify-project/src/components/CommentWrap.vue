@@ -5,6 +5,7 @@ import Comments from "@/components/Comments.vue";
 import AddComment from "@/components/AddComment.vue";
 import {useDetailStore} from "@/stores/detail";
 import {useCommentStore} from "@/stores/comment";
+import UpdateComment from "@/components/UpdateComment.vue";
 
 const detailStore = useDetailStore()
 const detailId = detailStore.detailId
@@ -17,43 +18,26 @@ const props = defineProps({
   postTitle : Object
 })
 
-const getCommentData = async () => {
-  const {data} = await axios.get( `${import.meta.env.VITE_BLOG_API}/comments`,{
-    params: {
-      post: detailId,
-      order: 'asc',
-      orderby: 'date',
-      per_page: 100
-    }
-  })
-  comment.value = data
-
-  // total.value = Number(headers['x-wp-total'])
-  console.log('불러오기')
-}
-
 onMounted( ()=>{
   commentStore.getComment(detailId)
-  getCommentData()
 })
 
 watch(
-  () => comment.value,
+  () => commentStore.commentList,
   (data) => {
-    console.log(comment.value)
-  },
-  {immediate: true}
+    comment.value = data
+  }
 )
+
 
 </script>
 
 <template>
- <div v-if="comment.length > 0 ">
+ <div>
    <h3> 게시글 "{{props.postTitle.rendered}}" 댓글 수 : {{ comment.length }} </h3>
-   <Comments @update="getCommentData" @reply="getCommentData" @delete="getCommentData" :data="comment"/>
+   <Comments @update="" @reply="" @delete="" />
    <div>
-    <AddComment @submit="getCommentData" />
+    <UpdateComment />
    </div>
  </div>
-  <div v-else>댓글 로딩 중 . . .</div>
 </template>

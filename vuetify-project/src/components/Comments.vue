@@ -20,18 +20,18 @@ const emit = defineEmits([
   'delete'
 ])
 
-const store = useCommentStore()
+const commentStore = useCommentStore()
 
 const commentData = ref([])
 
 watch(
-  () => props.data,
+  () => commentStore.commentList,
   (data) => {
     commentData.value = data
     commentData.value.forEach(item => {
-      if(store.edit[item.id] === undefined || store.reply[item.id] === undefined){
-        store.edit[item.id] = false
-        store.reply[item.id] = false
+      if(commentStore.edit[item.id] === undefined || commentStore.reply[item.id] === undefined){
+        commentStore.edit[item.id] = false
+        commentStore.reply[item.id] = false
       }
     })
   },
@@ -39,12 +39,12 @@ watch(
 )
 
 onMounted( ()=> {
-  commentData.value = props.data
+  commentData.value = commentStore.commentList
 
   commentData.value.forEach(item => {
-    if(store.edit[item.id] === undefined || store.reply[item.id] === undefined){
-      store.edit[item.id] = false
-      store.reply[item.id] = false
+    if(commentStore.edit[item.id] === undefined || commentStore.reply[item.id] === undefined){
+      commentStore.edit[item.id] = false
+      commentStore.reply[item.id] = false
     }
   })
 })
@@ -56,28 +56,30 @@ const date = (item) => {
 }
 
 const showEdit = (selectedId) => {
-  store.editToggle(selectedId)
-  store.replyResetAll()
+  commentStore.editToggle(selectedId)
+  commentStore.replyResetAll()
 
-  store.currentComment = {
-    index: selectedId,
-    title: 'aaaaa'
+  const contentValue = commentData.value.find(item => item.id === selectedId)
+  commentStore.currentComment = {
+    id: selectedId,
+    name: contentValue.author_name,
+    content: contentValue.content.rendered
   }
 }
 
 const showReply = (selectedId) => {
-  store.replyToggle(selectedId)
-  store.editResetAll()
+  commentStore.replyToggle(selectedId)
+  commentStore.editResetAll()
 }
 
 const handleUpdate = () => {
   emit('update')
-  store.editResetAll()
+  commentStore.editResetAll()
 }
 
 const handleReply = () => {
   emit('reply')
-  store.replyResetAll()
+  commentStore.replyResetAll()
   console.log('중간')
 }
 // FIXME: delete api 권한 이슈, delete password로 가능할지 확인
@@ -95,14 +97,14 @@ const handleDelete = (id) => {
       부모 : {{ item.parent }}
       <button @click="() => showEdit(item.id)" style="margin: 10px; border: 1px solid black;">Edit</button>
       <button @click="() => handleDelete(item.id)" style="margin: 10px; border: 1px solid black;">Delete</button>
-      <div v-if="store.edit[item.id]">
-        <UpdateComment @update="handleUpdate()" :item-data="item" />
+      <div v-if="commentStore.edit[item.id]">
+        <UpdateComment @update="handleUpdate" :item-data="item" />
       </div>
-      <div v-if="!store.edit[item.id]">
+      <div v-if="!commentStore.edit[item.id]">
         <div v-html="item.content.rendered"></div>
       </div>
       <button @click="() => showReply(item.id)" style="margin: 10px; border: 1px solid black;">Reply</button>
-      <div v-if="store.reply[item.id]">
+      <div v-if="commentStore.reply[item.id]">
         <ReplyComment @reply="handleReply" :item-data="item" />
       </div>
       <comments :data="commentData.filter(v => v.parent !== 0)" :parent-id="item.id" :key="item.id"></comments>
