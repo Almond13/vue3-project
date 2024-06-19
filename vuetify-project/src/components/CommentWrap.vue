@@ -28,15 +28,13 @@ watch(
     comment.value = data
   }
 )
-
-
 </script>
 
 <template>
  <div>
    <h3> 게시글 "{{props.postTitle.rendered}}" 댓글 수 : {{ comment.length }} </h3>
-   <Comments @update="" @reply="" @delete="" />
-   <div>
+   <Comments />
+   <div v-if="commentStore.typeIndex > 0">
     <UpdateComment />
    </div>
  </div>

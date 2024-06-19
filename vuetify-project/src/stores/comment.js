@@ -7,11 +7,16 @@ const defaultState = {
   reply: {},
   postId: 0,
   commentList: [],
-  typeIndex:-1,
-  currentComment: {}
+  typeIndex: 1,
+  currentComment: {},
+  postComment : {
+    name: '',
+    content: '',
+    email: ''
+  }
 }
 
-export const useCommentStore = defineStore('isEdit',{
+export const useCommentStore = defineStore('commentStore',{
   state: () => ({
     ...defaultState,
     defaultState: defaultState
@@ -56,7 +61,26 @@ export const useCommentStore = defineStore('isEdit',{
 
       this.commentList = data
     },
-    // add() {},
+    async handleAdd() {
+      await axios.post( `${import.meta.env.VITE_BLOG_API}/comments`, {
+          post: this.postId,
+          parent: 0,
+          author_name: this.postComment.name,
+          content: this.postComment.content,
+          author_email: this.postComment.email
+        }
+      )
+      await this.getComment(this.postId)
+    },
+    async handleEditUpdate(){
+      // axios.patch( `${import.meta.env.VITE_BLOG_API}/comments`, {
+      //   id: props.itemData.id,
+      //   content: 'commentContent.value!!!!!!!'
+      // })
+      // console.log(this.currentComment.id)
+      await this.editResetAll()
+      await this.getComment(this.postId)
+    }
     // replay() {},
     // edit() {}
   },

@@ -14,12 +14,6 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits([
-  'update',
-  'reply',
-  'delete'
-])
-
 const commentStore = useCommentStore()
 
 const commentData = ref([])
@@ -58,35 +52,27 @@ const date = (item) => {
 const showEdit = (selectedId) => {
   commentStore.editToggle(selectedId)
   commentStore.replyResetAll()
+  !commentStore.edit[selectedId] ? commentStore.typeIndex = 1 : commentStore.typeIndex = -1
 
   const contentValue = commentData.value.find(item => item.id === selectedId)
   commentStore.currentComment = {
     id: selectedId,
     name: contentValue.author_name,
-    content: contentValue.content.rendered
+    content: contentValue.content.rendered.replace(/<\/?p>/g, '')
   }
 }
 
 const showReply = (selectedId) => {
   commentStore.replyToggle(selectedId)
   commentStore.editResetAll()
+  !commentStore.reply[selectedId] ? commentStore.typeIndex = 1 : commentStore.typeIndex = -1
 }
 
-const handleUpdate = () => {
-  emit('update')
-  commentStore.editResetAll()
-}
-
-const handleReply = () => {
-  emit('reply')
-  commentStore.replyResetAll()
-  console.log('중간')
-}
 // FIXME: delete api 권한 이슈, delete password로 가능할지 확인
 const handleDelete = (id) => {
   // axios.delete(`${import.meta.env.VITE_BLOG_API}/comments/${id}`)
-  emit('delete')
 }
+
 </script>
 
 <template>
@@ -95,17 +81,20 @@ const handleDelete = (id) => {
       {{ item.id }} {{ item.author_name }}
       {{ date(item) }}
       부모 : {{ item.parent }}
-      <button @click="() => showEdit(item.id)" style="margin: 10px; border: 1px solid black;">Edit</button>
-      <button @click="() => handleDelete(item.id)" style="margin: 10px; border: 1px solid black;">Delete</button>
-      <div v-if="commentStore.edit[item.id]">
-        <UpdateComment @update="handleUpdate" :item-data="item" />
-      </div>
-      <div v-if="!commentStore.edit[item.id]">
+      <button v-show="!commentStore.reply[item.id]" @click="() => showEdit(item.id)" style="margin: 10px; border: 1px solid black;">
+        {{ commentStore.edit[item.id] ? `Cancel` : `Edit` }}
+      </button>
+      <button v-show="!commentStore.edit[item.id] && !commentStore.reply[item.id]" @click="() => handleDelete(item.id)" style="margin: 10px; border: 1px solid black;">
+        Delete
+      </button>
+      <div v-show="!commentStore.edit[item.id]">
         <div v-html="item.content.rendered"></div>
       </div>
-      <button @click="() => showReply(item.id)" style="margin: 10px; border: 1px solid black;">Reply</button>
-      <div v-if="commentStore.reply[item.id]">
-        <ReplyComment @reply="handleReply" :item-data="item" />
+      <button v-show="!commentStore.edit[item.id]" @click="() => showReply(item.id)" style="margin: 10px; border: 1px solid black;">
+        {{ commentStore.reply[item.id] ? `Cancel` : `Reply` }}
+      </button>
+      <div v-if="commentStore.reply[item.id] || commentStore.edit[item.id]">
+        <UpdateComment :item-data="item" />
       </div>
       <comments :data="commentData.filter(v => v.parent !== 0)" :parent-id="item.id" :key="item.id"></comments>
     </div>
