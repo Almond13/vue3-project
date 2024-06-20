@@ -1,10 +1,8 @@
 <script setup>
 import {onMounted, ref, watch} from "vue";
-import axios from "axios";
 import Comments from "@/components/Comments.vue";
 import UpdateComment from "@/components/UpdateComment.vue";
 import {useCommentStore} from "@/stores/comment";
-import ReplyComment from "@/components/ReplyComment.vue";
 
 const props = defineProps({
   data: Array,
@@ -65,14 +63,19 @@ const showEdit = (selectedId) => {
 const showReply = (selectedId) => {
   commentStore.replyToggle(selectedId)
   commentStore.editResetAll()
+  commentStore.postComment = {
+    ...commentStore.postComment,
+    id: selectedId
+  }
   !commentStore.reply[selectedId] ? commentStore.typeIndex = 1 : commentStore.typeIndex = -1
 }
 
-// FIXME: delete api 권한 이슈, delete password로 가능할지 확인
-const handleDelete = (id) => {
-  // axios.delete(`${import.meta.env.VITE_BLOG_API}/comments/${id}`)
+const resetCurrentComment = () => {
+  commentStore.replyResetAll()
+  commentStore.editResetAll()
+  commentStore.postComment = commentStore.defaultState.postComment
+  commentStore.typeIndex = 1
 }
-
 </script>
 
 <template>
@@ -81,18 +84,28 @@ const handleDelete = (id) => {
       {{ item.id }} {{ item.author_name }}
       {{ date(item) }}
       부모 : {{ item.parent }}
-      <button v-show="!commentStore.reply[item.id]" @click="() => showEdit(item.id)" style="margin: 10px; border: 1px solid black;">
-        {{ commentStore.edit[item.id] ? `Cancel` : `Edit` }}
-      </button>
-      <button v-show="!commentStore.edit[item.id] && !commentStore.reply[item.id]" @click="() => handleDelete(item.id)" style="margin: 10px; border: 1px solid black;">
-        Delete
-      </button>
-      <div v-show="!commentStore.edit[item.id]">
-        <div v-html="item.content.rendered"></div>
+      <div v-html="item.content.rendered"></div>
+      <div v-if="!commentStore.reply[item.id]">
+        <button v-if="!commentStore.edit[item.id]" @click="() => showEdit(item.id)" style="margin: 10px; border: 1px solid black;">
+          Edit
+        </button>
+        <button v-else @click="resetCurrentComment" style="margin: 10px; border: 1px solid black;">
+          Cancel
+        </button>
       </div>
-      <button v-show="!commentStore.edit[item.id]" @click="() => showReply(item.id)" style="margin: 10px; border: 1px solid black;">
-        {{ commentStore.reply[item.id] ? `Cancel` : `Reply` }}
-      </button>
+      <div v-if="!commentStore.edit[item.id] && !commentStore.reply[item.id]">
+        <button @click="() => commentStore.handleDelete(item.id)" style="margin: 10px; border: 1px solid black;">
+          Delete
+        </button>
+      </div>
+      <div v-if="!commentStore.edit[item.id]">
+        <button v-if="!commentStore.reply[item.id]" @click="() => showReply(item.id)" style="margin: 10px; border: 1px solid black;">
+          Reply
+        </button>
+        <button v-else @click="resetCurrentComment" style="margin: 10px; border: 1px solid black;">
+          Cancel
+        </button>
+      </div>
       <div v-if="commentStore.reply[item.id] || commentStore.edit[item.id]">
         <UpdateComment :item-data="item" />
       </div>

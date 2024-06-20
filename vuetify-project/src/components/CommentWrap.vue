@@ -1,8 +1,6 @@
 <script setup>
 import {onMounted, ref, watch} from "vue";
-import axios from "axios";
 import Comments from "@/components/Comments.vue";
-import AddComment from "@/components/AddComment.vue";
 import {useDetailStore} from "@/stores/detail";
 import {useCommentStore} from "@/stores/comment";
 import UpdateComment from "@/components/UpdateComment.vue";

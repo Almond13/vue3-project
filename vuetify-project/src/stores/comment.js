@@ -9,11 +9,7 @@ const defaultState = {
   commentList: [],
   typeIndex: 1,
   currentComment: {},
-  postComment : {
-    name: '',
-    content: '',
-    email: ''
-  }
+  postComment: {},
 }
 
 export const useCommentStore = defineStore('commentStore',{
@@ -48,7 +44,6 @@ export const useCommentStore = defineStore('commentStore',{
       })
     },
     async getComment(id) {
-      // console.log('store', id)
       this.postId = id
       const {data} = await axios.get( `${import.meta.env.VITE_BLOG_API}/comments`,{
         params: {
@@ -71,17 +66,35 @@ export const useCommentStore = defineStore('commentStore',{
         }
       )
       await this.getComment(this.postId)
+      this.postComment = this.defaultState.postComment
     },
+    // FIXME: update api 권한(?) 이슈, 추후 수정, 비밀번호로 가능한지 확인
     async handleEditUpdate(){
-      // axios.patch( `${import.meta.env.VITE_BLOG_API}/comments`, {
-      //   id: props.itemData.id,
-      //   content: 'commentContent.value!!!!!!!'
+      // await axios.patch( `${import.meta.env.VITE_BLOG_API}/comments`, {
+      //   id: this.currentComment.id,
+      //   content: this.postComment.content === undefined ? this.currentComment.content : this.postComment.content
       // })
-      // console.log(this.currentComment.id)
       await this.editResetAll()
       await this.getComment(this.postId)
+      this.postComment = this.defaultState.postComment
+      this.typeIndex = 1
+    },
+    async handleReply(){
+      await axios.post( `${import.meta.env.VITE_BLOG_API}/comments`, {
+        post: this.postId,
+        parent: this.postComment.id,
+        author_name: this.postComment.name,
+        author_email: this.postComment.email,
+        content: this.postComment.content,
+      })
+      await this.replyResetAll()
+      await this.getComment(this.postId)
+      this.postComment = this.defaultState.postComment
+      this.typeIndex = 1
+    },
+    // FIXME: delete api 권한 이슈, delete password로 가능할지 확인
+    async handleDelete(id){
+      await axios.delete(`${import.meta.env.VITE_BLOG_API}/comments/${id}`)
     }
-    // replay() {},
-    // edit() {}
   },
 })

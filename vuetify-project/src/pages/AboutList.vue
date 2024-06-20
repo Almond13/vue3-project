@@ -8,7 +8,6 @@ const route = useRoute()
 const list = ref([])
 const total = ref(0)
 const currentPage = ref(Number(route.params.page) || 1)
-// const currentPage = ref(Math.ceil(Number(route.params.page) || 1  / 5) * 5)
 
 const getPost = async () => {
   const {headers, data} = await axios.get( `${import.meta.env.VITE_BLOG_API}/posts`,{
@@ -24,6 +23,7 @@ const getPost = async () => {
 
 onMounted( () => {
   getPost()
+
 })
 
 watch(
@@ -34,6 +34,12 @@ watch(
   }
 )
 
+const pageGroup= () => {
+  const startPage = Math.floor((currentPage.value - 1) / 5) * 5 + 1
+  const endPage = Math.min(startPage + 4, total.value)
+  return { startPage, endPage }
+}
+// TODO : total comment,
 </script>
 
 <template>
@@ -44,23 +50,37 @@ watch(
     <router-link :to="{
        name: 'aboutList',
       params:{
+        page: 1
+      }
+    }">first</router-link>
+    <router-link :to="{
+       name: 'aboutList',
+      params:{
         page: currentPage > 1 ? currentPage -1 : 1
       }
-    }">prev</router-link>
-      <div v-for="key in total" :style="{display: 'inline-block', padding: '5px'}" :key="key">
-        <router-link :to="{
+    }"> <</router-link>
+      <div v-for="key in 5" :style="{display: 'inline-block', padding: '5px'}" :key="key">
+        <router-link
+          v-if="pageGroup().startPage + key -1 <= total"
+          :to="{
           name: 'aboutList',
           params:{
-            page: key
+            page: pageGroup().startPage + key -1
           }
-        }">{{key}}</router-link>
+        }">{{pageGroup().startPage + key -1}}</router-link>
       </div>
-    <router-link v-show="currentPage < total" :to="{
+    <router-link :to="{
       name: 'aboutList',
       params:{
-        page: currentPage + 1
+        page: currentPage < total ? currentPage + 1 : total
       }
-    }">next</router-link>
+    }">> </router-link>
+    <router-link :to="{
+       name: 'aboutList',
+      params:{
+        page: total
+      }
+    }">last</router-link>
   </div>
 </template>
 
