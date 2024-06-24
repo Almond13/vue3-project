@@ -9,7 +9,7 @@
     <v-main>
 <!--      <HelloWorld />-->
 
-      <div style="border: 1px solid red;">
+      <div style="border: 1px solid gray;">
       <RouterView></RouterView>
       </div>
     </v-main>
@@ -22,3 +22,10 @@
   //
   import { RouterLink } from 'vue-router'
 </script>
+
+<style>
+button, input {
+  margin: 10px;
+  border: 1px solid black;
+}
+</style>

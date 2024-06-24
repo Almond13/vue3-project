@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref, onBeforeUnmount, onUnmounted} from "vue";
+import {onMounted, ref, onUnmounted} from "vue";
 import axios from "axios";
 import {useRoute} from "vue-router";
 import CommentWrap from "@/components/CommentWrap.vue";
@@ -45,6 +45,7 @@ onUnmounted(() => {
     <div v-html="post.content.rendered"></div>
     <h2>Comments</h2>
     <CommentWrap :post-title="post.title" />
+    <router-link to=""></router-link>
   </div>
   <div v-else></div>
 </template>

@@ -80,29 +80,29 @@ const resetCurrentComment = () => {
 
 <template>
   <div>
-    <div v-for="item in commentData.filter(v => v.parent === props.parentId)" :key="item.id" style="margin: 10px; border: 1px solid red;">
+    <div v-for="item in commentData.filter(v => v.parent === props.parentId)" :key="item.id" style="margin: 10px; border: 1px solid gray;">
       {{ item.id }} {{ item.author_name }}
       {{ date(item) }}
       부모 : {{ item.parent }}
       <div v-html="item.content.rendered"></div>
       <div v-if="!commentStore.reply[item.id]">
-        <button v-if="!commentStore.edit[item.id]" @click="() => showEdit(item.id)" style="margin: 10px; border: 1px solid black;">
+        <button v-if="!commentStore.edit[item.id]" @click="() => showEdit(item.id)">
           Edit
         </button>
-        <button v-else @click="resetCurrentComment" style="margin: 10px; border: 1px solid black;">
+        <button v-else @click="resetCurrentComment">
           Cancel
         </button>
       </div>
       <div v-if="!commentStore.edit[item.id] && !commentStore.reply[item.id]">
-        <button @click="() => commentStore.handleDelete(item.id)" style="margin: 10px; border: 1px solid black;">
+        <button @click="() => commentStore.handleDelete(item.id)">
           Delete
         </button>
       </div>
       <div v-if="!commentStore.edit[item.id]">
-        <button v-if="!commentStore.reply[item.id]" @click="() => showReply(item.id)" style="margin: 10px; border: 1px solid black;">
+        <button v-if="!commentStore.reply[item.id]" @click="() => showReply(item.id)">
           Reply
         </button>
-        <button v-else @click="resetCurrentComment" style="margin: 10px; border: 1px solid black;">
+        <button v-else @click="resetCurrentComment">
           Cancel
         </button>
       </div>

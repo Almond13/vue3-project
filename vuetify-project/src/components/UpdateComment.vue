@@ -91,22 +91,22 @@ onMounted( () => {
     <h3>{{title()}}</h3>
     <div>
       <h4>이름</h4>
-      <input v-model="nameValue" style="margin: 10px; border: 1px solid black;" />
+      <input v-model="nameValue"/>
       <div v-if="!isEdit">
         <h4>이메일</h4>
-        <input v-model="emailValue" style="margin: 10px; border: 1px solid black;" />
+        <input v-model="emailValue"/>
       </div>
       <h4>내용</h4>
-      <input v-model="contentValue" style="margin: 10px; border: 1px solid black;" />
+      <input v-model="contentValue"/>
     </div>
     <div v-if="isAdd">
-      <button @click="commentStore.handleAdd()" style="margin: 10px; border: 1px solid black;">Submit</button>
+      <button @click="commentStore.handleAdd()">Submit</button>
     </div>
     <div v-else-if="isEdit">
-      <button @click="commentStore.handleEditUpdate()" style="margin: 10px; border: 1px solid black;">Update</button>
+      <button @click="commentStore.handleEditUpdate()">Update</button>
     </div>
     <div v-else>
-      <button @click="commentStore.handleReply()" style="margin: 10px; border: 1px solid black;">Reply Update</button>
+      <button @click="commentStore.handleReply()">Reply Update</button>
     </div>
   </div>
 </template>

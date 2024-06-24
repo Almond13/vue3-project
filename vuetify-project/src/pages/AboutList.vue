@@ -47,40 +47,51 @@ const pageGroup= () => {
     <div v-for="item in list">
       <router-link :to="{name: 'aboutDetail', params: {id: item.id}}">{{item.id}} / {{ item.title.rendered }}</router-link>
     </div>
-    <router-link :to="{
-       name: 'aboutList',
-      params:{
-        page: 1
-      }
-    }">first</router-link>
-    <router-link :to="{
-       name: 'aboutList',
-      params:{
-        page: currentPage > 1 ? currentPage -1 : 1
-      }
-    }"> <</router-link>
-      <div v-for="key in 5" :style="{display: 'inline-block', padding: '5px'}" :key="key">
-        <router-link
-          v-if="pageGroup().startPage + key -1 <= total"
-          :to="{
-          name: 'aboutList',
-          params:{
-            page: pageGroup().startPage + key -1
-          }
-        }">{{pageGroup().startPage + key -1}}</router-link>
+    <div class="d-flex align-center flex-row spacing-playground pa-2">
+      <router-link :to="{
+         name: 'aboutList',
+        params:{
+          page: 1
+        }
+      }">first</router-link>
+      <router-link :to="{
+         name: 'aboutList',
+        params:{
+          page: currentPage > 1 ? currentPage -1 : 1
+        }
+      }"> <</router-link>
+      <div class="d-flex align-center flex-row">
+        <div v-for="key in 5" :key="key">
+          <router-link
+            v-if="pageGroup().startPage + key -1 <= total"
+            :to="{
+            name: 'aboutList',
+            params:{
+              page: pageGroup().startPage + key -1
+            }
+          }"
+          >{{pageGroup().startPage + key -1}}</router-link>
+        </div>
       </div>
-    <router-link :to="{
-      name: 'aboutList',
-      params:{
-        page: currentPage < total ? currentPage + 1 : total
-      }
-    }">> </router-link>
-    <router-link :to="{
-       name: 'aboutList',
-      params:{
-        page: total
-      }
-    }">last</router-link>
+      <router-link :to="{
+        name: 'aboutList',
+        params:{
+          page: currentPage < total ? currentPage + 1 : total
+        }
+      }">> </router-link>
+      <router-link :to="{
+         name: 'aboutList',
+        params:{
+          page: total
+        }
+      }">last</router-link>
+    </div>
   </div>
 </template>
+
+<style>
+a{
+  padding: 3px;
+}
+</style>
 
