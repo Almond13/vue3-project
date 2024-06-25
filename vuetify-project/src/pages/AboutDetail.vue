@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref, onUnmounted} from "vue";
+import {onMounted, ref, onUnmounted, watch} from "vue";
 import axios from "axios";
 import {useRoute} from "vue-router";
 import CommentWrap from "@/components/CommentWrap.vue";
@@ -14,8 +14,8 @@ const detailId = ref(route.params.id)
 
 const commentStore = useCommentStore()
 
-onMounted(async ()=>{
-  const {data, headers}  = await axios.get(`${import.meta.env.VITE_BLOG_API}/posts/${detailId.value}`)
+const getDetail = async () => {
+  const {data}  = await axios.get(`${import.meta.env.VITE_BLOG_API}/posts/${detailId.value}`)
 
   post.value = data
 
@@ -25,14 +25,37 @@ onMounted(async ()=>{
 
   fixedDate.value =  dateObj.toLocaleDateString('en-US', options)
 
-  store.detailId = route.params.id
+  store.detailId = Number(route.params.id)
+  //
+  // await store.getListAll()
+}
+
+onMounted(()=>{
+  getDetail()
 })
+
+watch(
+  () => route.params.id,
+  (id) => {
+    detailId.value = id
+    getDetail()
+    commentStore.getComment(id)
+  }
+)
+
+// const prevId = store.totalList.find(item => item.id === detailId ? item : '')
 
 // TODO : store 초기화 공부
 onUnmounted(() => {
   commentStore.$state = {
     ...commentStore.defaultState,
     defaultState: commentStore.defaultState
+  }
+  store.$state = {
+    ...store.defaultState,
+    prevPost: store.defaultState.prevPost,
+    nextPost: store.defaultState.nextPost,
+    defaultState: store.defaultState
   }
 })
 
@@ -43,9 +66,13 @@ onUnmounted(() => {
     {{fixedDate}}
     <h1>{{post.title.rendered}}</h1>
     <div v-html="post.content.rendered"></div>
+<!--    머여 - {{prevId}} - -->
+    <div>
+      <router-link :to="{name: 'aboutDetail', params: {id: store.prevPost}}">이전 글</router-link>
+      <router-link :to="{name: 'aboutDetail', params: {id: store.nextPost}}">다음글</router-link>
+    </div>
     <h2>Comments</h2>
     <CommentWrap :post-title="post.title" />
-    <router-link to=""></router-link>
   </div>
   <div v-else></div>
 </template>

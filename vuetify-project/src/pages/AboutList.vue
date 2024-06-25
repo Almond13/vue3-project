@@ -1,42 +1,15 @@
 <script setup>
 import {onMounted, ref, watch} from "vue";
-
+import {useDetailStore} from "@/stores/detail";
 import axios from "axios";
 import { useRoute } from 'vue-router'
+
 const route = useRoute()
-
-const list = ref([])
-const total = ref(0)
-const currentPage = ref(Number(route.params.page) || 1)
-
-const getPost = async () => {
-  const {headers, data} = await axios.get( `${import.meta.env.VITE_BLOG_API}/posts`,{
-    params:{
-      per_page: 5,
-      page: currentPage.value
-    }
-  })
-
-  list.value = data
-  total.value = Number(headers['x-wp-totalpages'])
-}
-
-onMounted( () => {
-  getPost()
-
-})
-
-watch(
-  () => route.params.page,
-  (page) => {
-    currentPage.value = Number(page)
-    getPost()
-  }
-)
+const detailStore = useDetailStore()
 
 const pageGroup= () => {
-  const startPage = Math.floor((currentPage.value - 1) / 5) * 5 + 1
-  const endPage = Math.min(startPage + 4, total.value)
+  const startPage = Math.floor((detailStore.currentPage - 1) / 5) * 5 + 1
+  const endPage = Math.min(startPage + 4, detailStore.totalPage)
   return { startPage, endPage }
 }
 // TODO : total comment,
@@ -44,7 +17,7 @@ const pageGroup= () => {
 
 <template>
   <div>
-    <div v-for="item in list">
+    <div v-for="item in detailStore.aboutList">
       <router-link :to="{name: 'aboutDetail', params: {id: item.id}}">{{item.id}} / {{ item.title.rendered }}</router-link>
     </div>
     <div class="d-flex align-center flex-row spacing-playground pa-2">
@@ -57,13 +30,13 @@ const pageGroup= () => {
       <router-link :to="{
          name: 'aboutList',
         params:{
-          page: currentPage > 1 ? currentPage -1 : 1
+          page: detailStore.currentPage > 1 ? detailStore.currentPage -1 : 1
         }
       }"> <</router-link>
       <div class="d-flex align-center flex-row">
         <div v-for="key in 5" :key="key">
           <router-link
-            v-if="pageGroup().startPage + key -1 <= total"
+            v-if="pageGroup().startPage + key -1 <= detailStore.totalPage"
             :to="{
             name: 'aboutList',
             params:{
@@ -76,13 +49,13 @@ const pageGroup= () => {
       <router-link :to="{
         name: 'aboutList',
         params:{
-          page: currentPage < total ? currentPage + 1 : total
+          page: detailStore.currentPage < detailStore.totalPage ? detailStore.currentPage + 1 : detailStore.totalPage
         }
       }">> </router-link>
       <router-link :to="{
          name: 'aboutList',
         params:{
-          page: total
+          page: detailStore.totalPage
         }
       }">last</router-link>
     </div>
