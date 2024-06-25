@@ -30,7 +30,6 @@ export const useDetailStore = defineStore('detailPage',{
 
       if(this.detailId !== String){
         const currentIndex = data.findIndex(item => item.id === this.detailId)
-        console.log(currentIndex)
         this.prevPost = data[currentIndex <= 0 ? currentIndex : currentIndex - 1].id
         this.nextPost = data[currentIndex >= data.length - 1 ? currentIndex : currentIndex + 1].id
       }

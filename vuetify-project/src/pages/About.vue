@@ -18,8 +18,6 @@ const getPost = async () => {
   store.totalPage = Number(headers['x-wp-totalpages'])
   store.totalItem = Number(headers['x-wp-total'])
   store.aboutList = data
-
-  await store.getListAll()
 }
 
 onMounted(()=>{

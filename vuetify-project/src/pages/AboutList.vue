@@ -12,7 +12,6 @@ const pageGroup= () => {
   const endPage = Math.min(startPage + 4, detailStore.totalPage)
   return { startPage, endPage }
 }
-// TODO : total comment,
 </script>
 
 <template>

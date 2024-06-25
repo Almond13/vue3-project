@@ -26,8 +26,8 @@ const getDetail = async () => {
   fixedDate.value =  dateObj.toLocaleDateString('en-US', options)
 
   store.detailId = Number(route.params.id)
-  //
-  // await store.getListAll()
+
+  await store.getListAll()
 }
 
 onMounted(()=>{
@@ -53,8 +53,7 @@ onUnmounted(() => {
   }
   store.$state = {
     ...store.defaultState,
-    prevPost: store.defaultState.prevPost,
-    nextPost: store.defaultState.nextPost,
+    aboutList: store.defaultState.aboutList,
     defaultState: store.defaultState
   }
 })
