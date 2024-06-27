@@ -11,8 +11,6 @@ const category = () => {
     return store.category = 1
   }else if(route.name === 'testList'){
     return store.category = 15
-  }else{
-    return store.category = null
   }
 }
 

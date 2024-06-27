@@ -4,7 +4,7 @@
       <h1>test</h1>
       <nav>
         <RouterLink to="/about/1">about</RouterLink>
-        <RouterLink to="/category/1">category</RouterLink>
+        <RouterLink to="/category/1" @click="store.category = null">category</RouterLink>
       </nav>
     </header>
     <v-main>
@@ -20,8 +20,10 @@
 </template>
 
 <script setup>
-  //
   import { RouterLink } from 'vue-router'
+  import {useDetailStore} from "@/stores/detail";
+
+  const store = useDetailStore()
 </script>
 
 <style>
