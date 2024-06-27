@@ -1,10 +1,7 @@
 <script setup>
-import {onMounted, ref, watch} from "vue";
+import {onMounted} from "vue";
 import {useDetailStore} from "@/stores/detail";
-import axios from "axios";
-import { useRoute } from 'vue-router'
 
-const route = useRoute()
 const detailStore = useDetailStore()
 
 const props = defineProps({
@@ -12,7 +9,7 @@ const props = defineProps({
   detailName: String
 })
 
-const pageGroup= () => {
+const pageGroup = () => {
   const startPage = Math.floor((detailStore.currentPage - 1) / 5) * 5 + 1
   const endPage = Math.min(startPage + 4, detailStore.totalPage)
   return { startPage, endPage }

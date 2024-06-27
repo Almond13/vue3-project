@@ -56,7 +56,6 @@ watch(
   }
 )
 
-// TODO : store 초기화 공부
 onUnmounted(() => {
   commentStore.$state = {
     ...commentStore.defaultState,

@@ -11,38 +11,28 @@ const category = () => {
     return store.category = 1
   }else if(route.name === 'testList'){
     return store.category = 15
+  }else{
+    return store.category = null
   }
 }
 
-const getPost = async () => {
-  store.currentPage = Number(route.params.page) || 1
-
-  const {headers, data} = await axios.get( `${import.meta.env.VITE_BLOG_API}/posts`,{
-    params:{
-      per_page: 5,
-      page: store.currentPage,
-      categories: category()
-    }
-  })
-  store.totalPage = Number(headers['x-wp-totalpages'])
-  store.totalItem = Number(headers['x-wp-total'])
-  store.aboutList = data
-}
-
-onMounted(()=>{
-  // getPost()
+const getPostList = () => {
   store.currentPage = Number(route.params.page) || 1
   category()
   store.getPost()
+}
+
+onMounted(()=>{
+  getPostList()
   console.log('마운트')
 })
 
-// watch(
-//   [() => route.params.page, () => route.name], () => {
-//     getPost()
-//     console.log('와치')
-//   },
-// )
+watch(
+  [() => route.params.page, () => route.name], () => {
+    getPostList()
+    console.log('와치')
+  },
+)
 
 </script>
 

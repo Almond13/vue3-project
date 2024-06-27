@@ -6,28 +6,20 @@ import { useRoute } from 'vue-router'
 const route = useRoute()
 const store = useDetailStore()
 
-const getPost = async () => {
+const getPostList = () => {
   store.currentPage = Number(route.params.page) || 1
-
-  const {headers, data} = await axios.get( `${import.meta.env.VITE_BLOG_API}/posts`,{
-    params:{
-      per_page: 5,
-      page: store.currentPage
-    }
-  })
-  store.totalPage = Number(headers['x-wp-totalpages'])
-  store.totalItem = Number(headers['x-wp-total'])
-  store.aboutList = data
+  store.category = null
+  store.getPost()
 }
 
 onMounted(()=>{
-  getPost()
+  getPostList()
 })
 
 watch(
   () => route.params.page,
   () => {
-    getPost()
+    getPostList()
   }
 )
 </script>
