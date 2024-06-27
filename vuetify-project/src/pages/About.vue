@@ -36,7 +36,7 @@ watch(
 <template>
   <div>
 <!--    <h2>about</h2>-->
-    <router-view></router-view>
+    <router-view list-name="aboutList" detail-name="aboutDetail"></router-view>
   </div>
 </template>
 

@@ -4,6 +4,7 @@
       <h1>test</h1>
       <nav>
         <RouterLink to="/about/1">about</RouterLink>
+        <RouterLink to="/category/1">category</RouterLink>
       </nav>
     </header>
     <v-main>

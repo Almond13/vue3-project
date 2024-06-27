@@ -5,6 +5,7 @@ import AboutView from '@/pages/About.vue'
 import AboutViewList from '@/pages/AboutList.vue'
 import AboutViewDetail from '@/pages/AboutDetail.vue'
 import Comments from "@/components/CommentWrap.vue";
+import CategoryView from "@/pages/Category.vue";
 
 const routes = [
   {path: '/', component: HomeView},
@@ -27,10 +28,41 @@ const routes = [
             component: Comments
           }
         ]
-
       }
     ]
   },
+  {name: 'category', path: '/category', component: CategoryView,
+    redirect: {name: 'categoryList'},
+    children: [
+      {
+        name: 'categoryList',
+        path: ':page?',
+        component: AboutViewList
+      },
+      {
+        name: 'unclassifiedList',
+        path: 'unclassified/:page?',
+        component: AboutViewList
+      },
+      {
+        name: 'testList',
+        path: 'test/:page?',
+        component: AboutViewList
+      },
+      {
+        name: 'categoryDetail',
+        path: 'post/:id?',
+        component: AboutViewDetail,
+        children:[
+          {
+            name: 'comment',
+            path: '',
+            component: Comments
+          }
+        ]
+      }
+    ]
+  }
 ]
 
 export const router = createRouter({

@@ -14,6 +14,11 @@ const detailId = ref(route.params.id)
 
 const commentStore = useCommentStore()
 
+const props = defineProps({
+  listName: String,
+  detailName: String
+})
+
 const getDetail = async () => {
   const {data}  = await axios.get(`${import.meta.env.VITE_BLOG_API}/posts/${detailId.value}`)
 
@@ -27,11 +32,19 @@ const getDetail = async () => {
 
   store.detailId = Number(route.params.id)
 
+  if(route.name === 'aboutDetail'){
+    store.category = null
+  }
   await store.getListAll()
 }
 
-onMounted(()=>{
-  getDetail()
+const resetList = () => {
+    store.aboutList = store.defaultState.aboutList
+}
+
+onMounted(async ()=>{
+  await getDetail()
+  resetList()
 })
 
 watch(
@@ -43,18 +56,11 @@ watch(
   }
 )
 
-// const prevId = store.totalList.find(item => item.id === detailId ? item : '')
-
 // TODO : store 초기화 공부
 onUnmounted(() => {
   commentStore.$state = {
     ...commentStore.defaultState,
     defaultState: commentStore.defaultState
-  }
-  store.$state = {
-    ...store.defaultState,
-    aboutList: store.defaultState.aboutList,
-    defaultState: store.defaultState
   }
 })
 
@@ -65,10 +71,9 @@ onUnmounted(() => {
     {{fixedDate}}
     <h1>{{post.title.rendered}}</h1>
     <div v-html="post.content.rendered"></div>
-<!--    머여 - {{prevId}} - -->
     <div>
-      <router-link :to="{name: 'aboutDetail', params: {id: store.prevPost}}">이전 글</router-link>
-      <router-link :to="{name: 'aboutDetail', params: {id: store.nextPost}}">다음글</router-link>
+      <router-link :to="{name: props.detailName, params: {id: store.prevPost}}">이전 글</router-link>
+      <router-link :to="{name: props.detailName, params: {id: store.nextPost}}">다음글</router-link>
     </div>
     <h2>Comments</h2>
     <CommentWrap :post-title="post.title" />
